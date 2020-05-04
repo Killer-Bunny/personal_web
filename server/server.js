@@ -23,6 +23,8 @@ const { User } = require('./models/user');
 app.use(bodyParser.json());
 app.use(cookieParser('MY SECRET'));
 
+app.use(express.static('client/build'))
+
 
 //DISPLAY
 app.get('/api/display', (req,res) => {
@@ -142,8 +144,14 @@ app.post('/api/addpage', (req,res) => {
   })
 })
 
+if(process.env.NODE_ENV == 'production') {
+  const path = require('path');
+  app.get('/*', (req,res) => {
+    res.sendfile(path.resolve(__dirname, '../client', 'build', 'index.html'))
+  })
+}
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 8000;
 app.listen(port,()=>{
   console.log('mothafucka im running');
 })
